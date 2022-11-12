@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>npc &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">npc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for npc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sprite_object</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span><span class="p">,</span> <span class="n">random</span><span class="p">,</span> <span class="n">choice</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">settings</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pathfinding.core.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+    <span class="kn">from</span> <span class="nn">pathfinding.finder.a_star</span> <span class="kn">import</span> <span class="n">AStarFinder</span>
+
+    <span class="n">library</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">library</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="NPC"><a class="viewcode-back" href="../npc.html#npc.NPC">[docs]</a><span class="k">class</span> <span class="nc">NPC</span><span class="p">(</span><span class="n">AnimatedSprite</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class npc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;resources/sprites/npc/soldier/0.png&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">),</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mf">0.38</span><span class="p">,</span> <span class="n">animation_time</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">gone</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method of the class NPc</span>
+
+<span class="sd">        :param game: takes instance of Game class.</span>
+<span class="sd">        :type game: object</span>
+<span class="sd">        :param path: path to the npc sprites.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param pos: gives the initial position of the npc.</span>
+<span class="sd">        :type pos: tuple</span>
+<span class="sd">        :param scale: scales the npc sprites.</span>
+<span class="sd">        :type scale: float</span>
+<span class="sd">        :param shift: shifts the npc sprites up and down.</span>
+<span class="sd">        :type shift: float</span>
+<span class="sd">        :param animation_time: animation time in milliseconds</span>
+<span class="sd">        :type animation_time: int</span>
+<span class="sd">        :param gone: Checks if the npc is death</span>
+<span class="sd">        :type gone: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">animation_time</span><span class="p">,</span> <span class="n">gone</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/attack&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">death_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/death&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idle_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/idle&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pain_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/pain&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">walk_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/walk&#39;</span><span class="p">)</span>
+        <span class="c1"># check what is the difficulty if the game is loaded or not</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load_game</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;difficulty&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">DIFFICULTY</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">==</span> <span class="s2">&quot;easy&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_dist</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mf">0.03</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_damage</span> <span class="o">=</span> <span class="mi">20</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mf">0.15</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drop</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">==</span> <span class="s2">&quot;hard&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_dist</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mf">0.03</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="mi">150</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_damage</span> <span class="o">=</span> <span class="mi">40</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mf">0.20</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drop</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_loop</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pain</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gone</span> <span class="o">=</span> <span class="n">gone</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ray_cast_value</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># for shooting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_search_trigger</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game</span>
+
+<div class="viewcode-block" id="NPC.update"><a class="viewcode-back" href="../npc.html#npc.NPC.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update method.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_animation_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_sprite</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_logic</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NPC.check_wall"><a class="viewcode-back" href="../npc.html#npc.NPC.check_wall">[docs]</a>    <span class="k">def</span> <span class="nf">check_wall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper for the check wall collision function.</span>
+
+<span class="sd">        :param x: x coordinates of npc.</span>
+<span class="sd">        :type x: int</span>
+<span class="sd">        :param y: y coordinates of npc.</span>
+<span class="sd">        :type y: int</span>
+<span class="sd">        :return: x and y if not in the world map</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span></div>
+
+<div class="viewcode-block" id="NPC.check_wall_collision"><a class="viewcode-back" href="../npc.html#npc.NPC.check_wall_collision">[docs]</a>    <span class="k">def</span> <span class="nf">check_wall_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checking for wall collision. Using the size of the npc sprite</span>
+
+<span class="sd">        :param dx: next x coordinate position of npc.</span>
+<span class="sd">        :type dx: float</span>
+<span class="sd">        :param dy: next y coordinate position of npc.</span>
+<span class="sd">        :type dy: float</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_wall</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_wall</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">dy</span></div>
+
+<div class="viewcode-block" id="NPC.path_find"><a class="viewcode-back" href="../npc.html#npc.NPC.path_find">[docs]</a>    <span class="k">def</span> <span class="nf">path_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">mini_map</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper function for A star algorithm of the path finding library</span>
+
+<span class="sd">        :param start: map tile position of npc</span>
+<span class="sd">        :type start: tuple</span>
+<span class="sd">        :param goal:  map tile position of player</span>
+<span class="sd">        :type goal: tuple</span>
+<span class="sd">        :param mini_map: take s the game map</span>
+<span class="sd">        :type mini_map: list</span>
+<span class="sd">        :return: last list value</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">matrix</span><span class="o">=</span><span class="n">mini_map</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">finder</span> <span class="o">=</span> <span class="n">AStarFinder</span><span class="p">()</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">runs</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">find_path</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">grid</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">grid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NPC.movement"><a class="viewcode-back" href="../npc.html#npc.NPC.movement">[docs]</a>    <span class="k">def</span> <span class="nf">movement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function for NPC movement</span>
+
+<span class="sd">        1If the pathfinding library is installed</span>
+<span class="sd">        the movement is done by A star algorithm, else BFS</span>
+
+<span class="sd">        :return None</span>
+<span class="sd">        :rtype: None&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">library</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">map_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">mini_map</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">map_pos</span><span class="p">)</span>
+
+        <span class="n">next_x</span><span class="p">,</span> <span class="n">next_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_pos</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_pos</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_handler</span><span class="o">.</span><span class="n">npc_positions</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;calculates the angle math.atan2 is measuring the clockwise angle. We are getting the next positions</span>
+<span class="sd">            then incrementing them 0.5 for not going into wall and subtracting the position that the npc is in.</span>
+<span class="sd">            calculate the increments and check if there is a wall or not.&quot;&quot;&quot;</span>
+
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">next_y</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">next_x</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_wall_collision</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NPC.attack"><a class="viewcode-back" href="../npc.html#npc.NPC.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for attacking the player with some random accuracy.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_trigger</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">get_damage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_damage</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NPC.loop_drop"><a class="viewcode-back" href="../npc.html#npc.NPC.loop_drop">[docs]</a>    <span class="k">def</span> <span class="nf">loop_drop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for dropping loot logic.</span>
+
+<span class="sd">        Checks if the NPC is alive and if the drop_loot is True</span>
+<span class="sd">        If drop is bigger than random it drops random selected item.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_loop</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">:</span>
+                <span class="n">loot_choice</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sprite_object</span><span class="o">.</span><span class="n">loot_type_list</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_handler</span><span class="o">.</span><span class="n">add_pick_sprites</span><span class="p">(</span><span class="n">SpriteObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;resources/sprites/collectables/</span><span class="si">{</span><span class="n">loot_choice</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span>
+                                                                       <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">pick</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">loot_choice</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drop_loop</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="NPC.animate_death"><a class="viewcode-back" href="../npc.html#npc.NPC.animate_death">[docs]</a>    <span class="k">def</span> <span class="nf">animate_death</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for animating death.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">global_trigger</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_counter</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">death_images</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">death_images</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">death_images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="NPC.animate_pain"><a class="viewcode-back" href="../npc.html#npc.NPC.animate_pain">[docs]</a>    <span class="k">def</span> <span class="nf">animate_pain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for animating pain</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pain_images</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_trigger</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pain</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="NPC.check_hit_in_npc"><a class="viewcode-back" href="../npc.html#npc.NPC.check_hit_in_npc">[docs]</a>    <span class="k">def</span> <span class="nf">check_hit_in_npc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for checking if player has hit NPC with different weapons</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">height_shoot</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">half_height</span><span class="p">,</span> <span class="n">HALF_HEIGHT</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">check</span> <span class="o">=</span> <span class="n">HALF_WIDTH</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprite_half_width</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_x</span> <span class="o">&lt;</span> <span class="n">HALF_WIDTH</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprite_half_width</span> <span class="ow">and</span> <span class="n">height_shoot</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ray_cast_value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">shot</span><span class="p">:</span>
+            <span class="c1"># for shotgun</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;shotgun&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
+                    <span class="c1"># self.game.sound.npc_pain.play()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pain</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">damage</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_health</span><span class="p">()</span>
+
+            <span class="c1"># for chainsaw</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;chainsaw&quot;</span><span class="p">:</span>
+                <span class="n">close_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1.6</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1.6</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">close_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">close_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">vroom_vroom</span><span class="p">:</span>
+                    <span class="c1"># self.game.sound.npc_pain.play()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pain</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">damage</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_health</span><span class="p">()</span>
+
+            <span class="c1"># for minigun</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;minigun&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
+                    <span class="c1"># self.game.sound.npc_pain.play()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pain</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">damage</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_health</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">total_damage_delt</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">damage</span></div>
+
+<div class="viewcode-block" id="NPC.check_health"><a class="viewcode-back" href="../npc.html#npc.NPC.check_health">[docs]</a>    <span class="k">def</span> <span class="nf">check_health</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for checking NPC health</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">frag_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">npc_death</span><span class="o">.</span><span class="n">play</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NPC.run_logic"><a class="viewcode-back" href="../npc.html#npc.NPC.run_logic">[docs]</a>    <span class="k">def</span> <span class="nf">run_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for npc run logic.</span>
+
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ray_cast_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ray_cast_player_npc</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_hit_in_npc</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pain</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">animate_pain</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ray_cast_value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_search_trigger</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_dist</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_images</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attack</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">walk_images</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">movement</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_search_trigger</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">walk_images</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">movement</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idle_images</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loop_drop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animate_death</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gone</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># option for user to choose if True fast disappear if false no disappear of corpses</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">map_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Property function to return npc position on map</span>
+
+<span class="sd">        :return: x and y</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NPC.ray_cast_player_npc"><a class="viewcode-back" href="../npc.html#npc.NPC.ray_cast_player_npc">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast_player_npc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Raycasting for NPC.</span>
+
+<span class="sd">        One line raycasting between NPC and player.</span>
+<span class="sd">        Is used for shooting logic and for pathfinding logic</span>
+
+<span class="sd">        :return: True or False</span>
+<span class="sd">        :rtype: Bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">map_pos</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">map_pos</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">interactions</span><span class="o">.</span><span class="n">map_pos</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">wall_dist_v</span><span class="p">,</span> <span class="n">wall_dist_h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">player_dist_v</span><span class="p">,</span> <span class="n">player_dist_h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">map_pos</span>
+
+        <span class="n">ray_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span>
+
+        <span class="n">sin_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ray_angle</span><span class="p">)</span>
+        <span class="n">cos_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ray_angle</span><span class="p">)</span>
+
+        <span class="c1"># horizontals</span>
+        <span class="n">y_hor</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_map</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">sin_a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">y_map</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">depth_hor</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_hor</span> <span class="o">-</span> <span class="n">oy</span><span class="p">)</span> <span class="o">/</span> <span class="n">sin_a</span>
+        <span class="n">x_hor</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">+</span> <span class="n">depth_hor</span> <span class="o">*</span> <span class="n">cos_a</span>
+
+        <span class="n">delta_depth</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">sin_a</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">delta_depth</span> <span class="o">*</span> <span class="n">cos_a</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_DEPTH</span><span class="p">):</span>
+            <span class="n">tile_hor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_hor</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_hor</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tile_hor</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">:</span>
+                <span class="n">player_dist_h</span> <span class="o">=</span> <span class="n">depth_hor</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">tile_hor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                <span class="n">wall_dist_h</span> <span class="o">=</span> <span class="n">depth_hor</span>
+                <span class="k">break</span>
+            <span class="n">x_hor</span> <span class="o">+=</span> <span class="n">dx</span>
+            <span class="n">y_hor</span> <span class="o">+=</span> <span class="n">dy</span>
+            <span class="n">depth_hor</span> <span class="o">+=</span> <span class="n">delta_depth</span>
+
+        <span class="c1"># verticals</span>
+        <span class="n">x_vert</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_map</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">cos_a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">x_map</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">depth_vert</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_vert</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span> <span class="o">/</span> <span class="n">cos_a</span>
+        <span class="n">y_vert</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">+</span> <span class="n">depth_vert</span> <span class="o">*</span> <span class="n">sin_a</span>
+
+        <span class="n">delta_depth</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">cos_a</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">delta_depth</span> <span class="o">*</span> <span class="n">sin_a</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_DEPTH</span><span class="p">):</span>
+            <span class="n">tile_vert</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_vert</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_vert</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tile_vert</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span><span class="p">:</span>
+                <span class="n">player_dist_v</span> <span class="o">=</span> <span class="n">depth_vert</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">tile_vert</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                <span class="n">wall_dist_v</span> <span class="o">=</span> <span class="n">depth_vert</span>
+                <span class="k">break</span>
+            <span class="n">x_vert</span> <span class="o">+=</span> <span class="n">dx</span>
+            <span class="n">y_vert</span> <span class="o">+=</span> <span class="n">dy</span>
+            <span class="n">depth_vert</span> <span class="o">+=</span> <span class="n">delta_depth</span>
+
+        <span class="n">player_dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">player_dist_v</span><span class="p">,</span> <span class="n">player_dist_h</span><span class="p">)</span>
+        <span class="n">wall_dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">wall_dist_v</span><span class="p">,</span> <span class="n">wall_dist_h</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">player_dist</span> <span class="o">&lt;</span> <span class="n">wall_dist</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">wall_dist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+
+<div class="viewcode-block" id="SoldierNPC"><a class="viewcode-back" href="../npc.html#npc.SoldierNPC">[docs]</a><span class="k">class</span> <span class="nc">SoldierNPC</span><span class="p">(</span><span class="n">NPC</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;resources/sprites/npc/soldier/0.png&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">),</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mf">0.38</span><span class="p">,</span> <span class="n">animation_time</span><span class="o">=</span><span class="mi">180</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">animation_time</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CyberDemonNPC"><a class="viewcode-back" href="../npc.html#npc.CyberDemonNPC">[docs]</a><span class="k">class</span> <span class="nc">CyberDemonNPC</span><span class="p">(</span><span class="n">NPC</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;resources/sprites/npc/cyber_demon/0.png&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">11.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">),</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">animation_time</span><span class="o">=</span><span class="mi">210</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">animation_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gone</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">==</span> <span class="s2">&quot;easy&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_dist</span> <span class="o">=</span> <span class="mi">5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="mi">250</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_damage</span> <span class="o">=</span> <span class="mi">60</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mf">0.055</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mf">0.25</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">==</span> <span class="s2">&quot;hard&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_dist</span> <span class="o">=</span> <span class="mi">6</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="mi">300</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_damage</span> <span class="o">=</span> <span class="mi">70</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mf">0.04</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mf">0.3</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

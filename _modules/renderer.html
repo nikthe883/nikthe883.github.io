@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>renderer &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">renderer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for renderer</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">settings</span>
+<span class="kn">from</span> <span class="nn">map</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="ObjectRenderer"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer">[docs]</a><span class="k">class</span> <span class="nc">ObjectRenderer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wall_textures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_wall_textures</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_textures</span><span class="p">(</span><span class="s1">&#39;resources/textures/sky.png&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">HEIGHT</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blood_screen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_textures</span><span class="p">(</span><span class="s1">&#39;resources/textures/blood_screen.png&#39;</span><span class="p">,</span> <span class="n">SCREEN_RESOLUTION</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span> <span class="o">=</span> <span class="n">WIDTH</span> <span class="o">//</span> <span class="n">DIGIT_SIZE_SCALE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">digit_images</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_textures</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;resources/textures/digits/</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">digits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_images</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_over_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_textures</span><span class="p">(</span><span class="s1">&#39;resources/textures/game_over.png&#39;</span><span class="p">,</span> <span class="n">SCREEN_RESOLUTION</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_textures</span><span class="p">(</span><span class="s1">&#39;resources/textures/win.png&#39;</span><span class="p">,</span> <span class="n">SCREEN_RESOLUTION</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ObjectRenderer.draw_timer"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw_timer">[docs]</a>    <span class="k">def</span> <span class="nf">draw_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function for drawing the timer if win condition by time is True&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">npc_kill_condition</span><span class="p">:</span>
+            <span class="n">counting_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">win_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">elapsed</span><span class="p">)</span>
+            <span class="n">counting_seconds</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">counting_time</span> <span class="o">//</span> <span class="mi">1000</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">counting_seconds</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">counting_seconds</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">counting_seconds</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.win"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.win">[docs]</a>    <span class="k">def</span> <span class="nf">win</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;win condition when the player have collected enough enemy kills&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">win_image</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.game_over"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.game_over">[docs]</a>    <span class="k">def</span> <span class="nf">game_over</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Loose image blit when player lost the game&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_over_image</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.draw_player_ammo"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw_player_ammo">[docs]</a>    <span class="k">def</span> <span class="nf">draw_player_ammo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Function for showing the player ammo on the screen</span>
+<span class="sd">            It enumerates the int number that is given and appends the digit number</span>
+<span class="sd">            to the given height and width&quot;&quot;&quot;</span>
+
+        <span class="n">ammo</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">ammo_to_show</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ammo</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ammo</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">19.5</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">8.8</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.draw_player_health"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw_player_health">[docs]</a>    <span class="k">def</span> <span class="nf">draw_player_health</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Function for showing the player health on the screen</span>
+<span class="sd">            It enumerates the int number that is given and appends the digit number</span>
+<span class="sd">            to the given height and width&quot;&quot;&quot;</span>
+
+        <span class="n">health</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">health</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">health</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">health</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">2.7</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">2.4</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.draw_frag_counter"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw_frag_counter">[docs]</a>    <span class="k">def</span> <span class="nf">draw_frag_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Function for showing the player kills on the screen</span>
+<span class="sd">            It enumerates the int number that is given and appends the digit number</span>
+<span class="sd">            to the given height and width&quot;&quot;&quot;</span>
+
+        <span class="n">frag</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">frag_counter</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frag</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">1.35</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">1.4</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">//</span> <span class="mf">1.47</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.draw_player_armor"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw_player_armor">[docs]</a>    <span class="k">def</span> <span class="nf">draw_player_armor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Function for showing the player armor on the screen</span>
+<span class="sd">        It enumerates the int number that is given and appends the digit number</span>
+<span class="sd">        to the given height and width&quot;&quot;&quot;</span>
+
+        <span class="n">armour</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">armor</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">armour</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">armour</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">num</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">*</span> <span class="mf">1.18</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">num</span><span class="p">],</span> <span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">HALF_WIDTH</span> <span class="o">*</span> <span class="mf">1.21</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">hud_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.player_damage"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.player_damage">[docs]</a>    <span class="k">def</span> <span class="nf">player_damage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bliting image when player gets damage&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blood_screen</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.draw"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drawing all the things in the renderer&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_background</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_game_object</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">hud</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_player_health</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_frag_counter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_player_armor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_player_ammo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_timer</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.draw_background"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.draw_background">[docs]</a>    <span class="k">def</span> <span class="nf">draw_background</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drawing the background. Sky image with some offset to the player position&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_offset</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_offset</span> <span class="o">*</span> <span class="mf">4.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">rel</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_image</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">half_height</span> <span class="o">-</span> <span class="n">HEIGHT</span><span class="p">))</span>
+        <span class="n">rectangle</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">half_height</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">HEIGHT</span><span class="p">)</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">FLOOR_COLOR</span><span class="p">,</span> <span class="n">rectangle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.render_game_object"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.render_game_object">[docs]</a>    <span class="k">def</span> <span class="nf">render_game_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rendering the game textures from the ray casting module&quot;&quot;&quot;</span>
+        <span class="n">list_objects</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">raycasting</span><span class="o">.</span><span class="n">objects_to_render</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">depth</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">list_objects</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.get_textures"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.get_textures">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_textures</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="p">(</span><span class="n">TEXTURE_SIZE</span><span class="p">,</span> <span class="n">TEXTURE_SIZE</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Static method for getting images and converting them&quot;&quot;&quot;</span>
+        <span class="n">texture</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">pg</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">texture</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.load_wall_textures"><a class="viewcode-back" href="../renderer.html#renderer.ObjectRenderer.load_wall_textures">[docs]</a>    <span class="k">def</span> <span class="nf">load_wall_textures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loading the textures of the wall&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_textures</span><span class="p">(</span><span class="s1">&#39;resources/textures/1.png&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>player &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">player</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for player</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">settings</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">weapons</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randrange</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
+
+
+<div class="viewcode-block" id="Player"><a class="viewcode-back" href="../player.html#player.Player">[docs]</a><span class="k">class</span> <span class="nc">Player</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">starting_pos</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_player</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">PLAYER_ANGLE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">half_height</span> <span class="o">=</span> <span class="n">HALF_HEIGHT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="n">PLAYER_MAX_HEALTH</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">=</span> <span class="n">PLAYER_MAX_ARMOR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">health_recovery_delay</span> <span class="o">=</span> <span class="n">HEALTH_RECOVERY_DELAY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_prev</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">=</span> <span class="n">PLAYER_MAX_SHOTGUN_AMMO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">=</span> <span class="n">PLAYER_MAX_MINIGUN_AMMO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">=</span> <span class="n">PLAYER_MAX_CHAINSAW_FUEL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel_consumption</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo_fires</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">=</span> <span class="s2">&quot;chainsaw&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weapons_list</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="s2">&quot;chainsaw&quot;</span><span class="p">,</span> <span class="s2">&quot;shotgun&quot;</span><span class="p">,</span> <span class="s2">&quot;minigun&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win_time</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">WIN_TIME</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_npc_kills</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MAX_NPC_KILLED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_kill_condition</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">NPC_KILL_CONDITION</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_now</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># for final score</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_damage_delt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_damage_received</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_ammo_fired</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frag_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Player.score"><a class="viewcode-back" href="../player.html#player.Player.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculating the total score for the end game&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_ammo_fired</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">frag_counter</span></div>
+
+<div class="viewcode-block" id="Player.load"><a class="viewcode-back" href="../player.html#player.Player.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loading function of the saved player parameters&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load_game</span><span class="p">:</span>
+            <span class="n">player_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;player_pos&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">player_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">player_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;player_health&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;player_armor&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;minigun_ammo&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;shotgun_ammo&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;fuel&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">npc_kill_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;kill_condition&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">win_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;win_time&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;timer&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frag_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;player_kills&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_npc_kills</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;max_npc_kill&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Player.win_condition"><a class="viewcode-back" href="../player.html#player.Player.win_condition">[docs]</a>    <span class="k">def</span> <span class="nf">win_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;&quot; Win condition on npc killed or on time passed&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_kill_condition</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_npc_kills</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frag_counter</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_renderer</span><span class="o">.</span><span class="n">win</span><span class="p">()</span>
+                <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+                <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">pause</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">final_score_menu</span><span class="o">.</span><span class="n">final_score_menu_trigger</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">final_score_menu</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">menu_trigger</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">pause</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">win_time</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_renderer</span><span class="o">.</span><span class="n">win</span><span class="p">()</span>
+                    <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+                    <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">pause</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">final_score_menu</span><span class="o">.</span><span class="n">final_score_menu_trigger</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">final_score_menu</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Player.check_game_over"><a class="viewcode-back" href="../player.html#player.Player.check_game_over">[docs]</a>    <span class="k">def</span> <span class="nf">check_game_over</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checking for game over condition&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_renderer</span><span class="o">.</span><span class="n">game_over</span><span class="p">()</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">win</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">pause</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">final_score_menu</span><span class="o">.</span><span class="n">final_score_menu_trigger</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">final_score_menu</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Player.place_player"><a class="viewcode-back" href="../player.html#player.Player.place_player">[docs]</a>    <span class="k">def</span> <span class="nf">place_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A function where we randomly place the player on the map if the tile is free. If we</span>
+<span class="sd">        don&#39;t do that from time to time the player will be placed in a wall which will make the game to freeze&quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">starting_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">starting_pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">starting_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">starting_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">starting_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.2</span></div>
+
+<div class="viewcode-block" id="Player.fuel_consumption_chainsaw"><a class="viewcode-back" href="../player.html#player.Player.fuel_consumption_chainsaw">[docs]</a>    <span class="k">def</span> <span class="nf">fuel_consumption_chainsaw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Function that checks the fuel consumption of the chainsaw and if there is no fuel it</span>
+<span class="sd">        stops the chainsaw&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel_consumption</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">fuel_consumption</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">fuel_consumption</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_ammo_fired</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">fuel_consumption</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_ammo</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">vroom_vroom</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">chainsaw_fire</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Player.minigun_ammo_consumption"><a class="viewcode-back" href="../player.html#player.Player.minigun_ammo_consumption">[docs]</a>    <span class="k">def</span> <span class="nf">minigun_ammo_consumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Function that checks the ammo consumption of the minigun and if there is no ammo it</span>
+<span class="sd">        stops the chainsaw&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo_fires</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">ammo</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">minigun_shoot</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_ammo_fired</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">minigun_shoot</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_ammo</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">minigun_shoot</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">minigun_fire</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Player.check_ammo"><a class="viewcode-back" href="../player.html#player.Player.check_ammo">[docs]</a>    <span class="k">def</span> <span class="nf">check_ammo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Simple function to check if ammo is negative if it is negative make it to 0&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Player.weapon_selector"><a class="viewcode-back" href="../player.html#player.Player.weapon_selector">[docs]</a>    <span class="k">def</span> <span class="nf">weapon_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Weapon selector secondary function for &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;chainsaw&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;shotgun&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon2</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;minigun&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon3</span></div>
+
+<div class="viewcode-block" id="Player.weapon_selection"><a class="viewcode-back" href="../player.html#player.Player.weapon_selection">[docs]</a>    <span class="k">def</span> <span class="nf">weapon_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Weapon selection based on 1,2,3 keys and mouse wheel&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;chainsaw&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;shotgun&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;minigun&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span>
+
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">K_1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">=</span> <span class="s2">&quot;chainsaw&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selector</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">K_2</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">=</span> <span class="s2">&quot;shotgun&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selector</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">K_3</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">=</span> <span class="s2">&quot;minigun&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selector</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">MOUSEWHEEL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weapons_list</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapons_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selector</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weapons_list</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapons_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selector</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Player.recover_health"><a class="viewcode-back" href="../player.html#player.Player.recover_health">[docs]</a>    <span class="k">def</span> <span class="nf">recover_health</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Health recovery&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_health_recovery_delay</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;</span> <span class="n">PLAYER_MAX_HEALTH</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Player.check_health_recovery_delay"><a class="viewcode-back" href="../player.html#player.Player.check_health_recovery_delay">[docs]</a>    <span class="k">def</span> <span class="nf">check_health_recovery_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Recovery delay for player&quot;&quot;&quot;</span>
+        <span class="n">time_now</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">time_now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_prev</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_recovery_delay</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_prev</span> <span class="o">=</span> <span class="n">time_now</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Player.get_damage"><a class="viewcode-back" href="../player.html#player.Player.get_damage">[docs]</a>    <span class="k">def</span> <span class="nf">get_damage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">damage</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Taking damage from NPC,</span>
+<span class="sd">        and taking from armor as well</span>
+<span class="sd">        the armor reduces the damage</span>
+<span class="sd">        rendering the damage effect and sound</span>
+<span class="sd">        checking if player is alive&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_damage_received</span> <span class="o">+=</span> <span class="n">damage</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">-=</span> <span class="n">damage</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">-=</span> <span class="n">damage</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">health</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_renderer</span><span class="o">.</span><span class="n">player_damage</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">player_pain</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_game_over</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Player.single_fire_event"><a class="viewcode-back" href="../player.html#player.Player.single_fire_event">[docs]</a>    <span class="k">def</span> <span class="nf">single_fire_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Logic for shooting, when chainsaw selected to shoot until mouse button up,</span>
+<span class="sd">        when shotgun selected shoot and animate,</span>
+<span class="sd">        when minigun selected shoot like chainsaw</span>
+<span class="sd">        and ammo restrictions&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+            <span class="c1"># shotgun</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;shotgun&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">shot</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">reloading</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">shotgun</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">reloading</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># for animation</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ammo_to_show</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">total_ammo_fired</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_ammo</span><span class="p">()</span>
+
+            <span class="c1"># chainsaw</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;chainsaw&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">vroom_vroom</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># for animation</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel_consumption</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shot</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">chainsaw_fire</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">vroom_vroom</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weapon_selected</span> <span class="o">==</span> <span class="s2">&quot;minigun&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">minigun_shoot</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># for animation</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shot</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo_fires</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">minigun_fire</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo_fires</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">minigun_shoot</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">chainsaw_fire</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sound</span><span class="o">.</span><span class="n">minigun_fire</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">vroom_vroom</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">weapon</span><span class="o">.</span><span class="n">minigun_shoot</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vruum_vruum_fuel_consumption</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo_fires</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shot</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Player.movement"><a class="viewcode-back" href="../player.html#player.Player.movement">[docs]</a>    <span class="k">def</span> <span class="nf">movement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Player movement. Fist we calculate the increments</span>
+<span class="sd">        because we are on 2D using the functions of sin and cos</span>
+<span class="sd">        Used for the player direction angle.</span>
+<span class="sd">        And getting out to the menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">my</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_pos</span>  <span class="c1"># for minimap</span>
+
+        <span class="n">sin_a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">cos_a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">speed</span> <span class="o">=</span> <span class="n">PLAYER_SPEED</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">delta_time</span>
+        <span class="n">speed_sin</span> <span class="o">=</span> <span class="n">speed</span> <span class="o">*</span> <span class="n">sin_a</span>
+        <span class="n">speed_cos</span> <span class="o">=</span> <span class="n">speed</span> <span class="o">*</span> <span class="n">cos_a</span>
+
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">menu_trigger</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">pause</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">menu</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">raycasting</span><span class="o">.</span><span class="n">show_raycast</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">K_r</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">raycasting</span><span class="o">.</span><span class="n">show_raycast</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pg</span><span class="o">.</span><span class="n">K_r</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">raycasting</span><span class="o">.</span><span class="n">show_raycast</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">movement_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">]]:</span>
+            <span class="n">dx</span> <span class="o">+=</span> <span class="n">speed_cos</span>
+            <span class="n">dy</span> <span class="o">+=</span> <span class="n">speed_sin</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">movement_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]]:</span>
+            <span class="n">dx</span> <span class="o">+=</span> <span class="o">-</span><span class="n">speed_cos</span>
+            <span class="n">dy</span> <span class="o">+=</span> <span class="o">-</span><span class="n">speed_sin</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">movement_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">]]:</span>
+            <span class="n">dx</span> <span class="o">+=</span> <span class="n">speed_sin</span>
+            <span class="n">dy</span> <span class="o">+=</span> <span class="o">-</span><span class="n">speed_cos</span>
+
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">movement_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">]]:</span>
+            <span class="n">dx</span> <span class="o">+=</span> <span class="o">-</span><span class="n">speed_sin</span>
+            <span class="n">dy</span> <span class="o">+=</span> <span class="n">speed_cos</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wall_collision</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">%=</span> <span class="n">math</span><span class="o">.</span><span class="n">tau</span></div>
+
+<div class="viewcode-block" id="Player.wall_check"><a class="viewcode-back" href="../player.html#player.Player.wall_check">[docs]</a>    <span class="k">def</span> <span class="nf">wall_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Checking where are the walls in the map&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span></div>
+
+<div class="viewcode-block" id="Player.wall_collision"><a class="viewcode-back" href="../player.html#player.Player.wall_collision">[docs]</a>    <span class="k">def</span> <span class="nf">wall_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Check for wall collision&quot;&quot;&quot;</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">PLAYER_SIZE_SCALE</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">delta_time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wall_check</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">scale</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wall_check</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">dy</span></div>
+
+<div class="viewcode-block" id="Player.mouse_control"><a class="viewcode-back" href="../player.html#player.Player.mouse_control">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Mouse control with restriction look up and down&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">my</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mx</span> <span class="o">&lt;</span> <span class="n">MOUSE_BORDER_LEFT</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">mx</span> <span class="o">&gt;</span> <span class="n">MOUSE_BORDER_RIGHT</span><span class="p">:</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="n">HALF_WIDTH</span><span class="p">,</span> <span class="n">HALF_HEIGHT</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">my</span> <span class="o">&lt;</span> <span class="n">MOUSE_BORDER_DOWN</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">my</span> <span class="o">&gt;</span> <span class="n">MOUSE_BORDER_UP</span><span class="p">:</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="n">HALF_WIDTH</span><span class="p">,</span> <span class="n">HALF_HEIGHT</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel1</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_rel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">MOUSE_MAX_REL</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">MOUSE_MAX_REL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">MOUSE_SENSITIVITY</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">delta_time</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">MOUSE_MAX_REL</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">MOUSE_MAX_REL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">half_height</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel1</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">MOUSE_SENSITIVITY</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">delta_time</span> <span class="o">*</span> <span class="mi">1000</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">half_height</span> <span class="o">&gt;</span> <span class="n">HALF_HEIGHT</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">half_height</span> <span class="o">=</span> <span class="n">HALF_HEIGHT</span> <span class="o">*</span> <span class="mf">1.5</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">half_height</span> <span class="o">&lt;</span> <span class="n">HALF_HEIGHT</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">half_height</span> <span class="o">=</span> <span class="n">HALF_HEIGHT</span> <span class="o">*</span> <span class="mf">0.5</span></div>
+
+<div class="viewcode-block" id="Player.update"><a class="viewcode-back" href="../player.html#player.Player.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Updating function&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recover_health</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movement</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mouse_control</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_consumption_chainsaw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minigun_ammo_consumption</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win_condition</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Player.draw"><a class="viewcode-back" href="../player.html#player.Player.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drawing the player on the minimap&quot;&quot;&quot;</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sc_map</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">MINIMAP_TILE_SIZE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">MINIMAP_TILE_SIZE</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Getting the player position&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">map_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Getting the tile possition the player is&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

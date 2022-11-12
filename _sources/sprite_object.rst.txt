@@ -1,0 +1,7 @@
+sprite\_object module
+=====================
+
+.. automodule:: sprite_object
+   :members:
+   :undoc-members:
+   :show-inheritance:

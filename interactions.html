@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>interactions module &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">interactions module</a><ul>
+<li><a class="reference internal" href="#interactions.ObjectInteraction"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction</span></code></a><ul>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.animate_death"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.animate_death()</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.animate_idle"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.animate_idle()</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.check_if_hit"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.check_if_hit()</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.logic"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.logic()</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.loop_drop"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.loop_drop()</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.map_pos"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.map_pos</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ObjectInteraction.update"><code class="docutils literal notranslate"><span class="pre">ObjectInteraction.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interactions.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+<li><a class="reference internal" href="#interactions.ray_cast_player_npc"><code class="docutils literal notranslate"><span class="pre">ray_cast_player_npc()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">interactions module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/interactions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-interactions">
+<span id="interactions-module"></span><h1>interactions module<a class="headerlink" href="#module-interactions" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interactions.</span></span><span class="sig-name descname"><span class="pre">ObjectInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'resources/sprites/interactables/barrel/0.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10.5,</span> <span class="pre">5.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="sprite_object.html#sprite_object.AnimatedSprite" title="sprite_object.AnimatedSprite"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimatedSprite</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.animate_death">
+<span class="sig-name descname"><span class="pre">animate_death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction.animate_death"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction.animate_death" title="Permalink to this definition"></a></dt>
+<dd><p>Death animation with frame counter not to continue animate it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.animate_idle">
+<span class="sig-name descname"><span class="pre">animate_idle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction.animate_idle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction.animate_idle" title="Permalink to this definition"></a></dt>
+<dd><p>“Idle animation function if object alive</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.check_if_hit">
+<span class="sig-name descname"><span class="pre">check_if_hit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction.check_if_hit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction.check_if_hit" title="Permalink to this definition"></a></dt>
+<dd><p>“Checking if we hit the object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.logic">
+<span class="sig-name descname"><span class="pre">logic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction.logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction.logic" title="Permalink to this definition"></a></dt>
+<dd><p>A simple logic for the object if death and if alive</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.loop_drop">
+<span class="sig-name descname"><span class="pre">loop_drop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction.loop_drop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction.loop_drop" title="Permalink to this definition"></a></dt>
+<dd><p>“Dropping loot logic</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.map_pos">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">map_pos</span></span><a class="headerlink" href="#interactions.ObjectInteraction.map_pos" title="Permalink to this definition"></a></dt>
+<dd><p>“Tile possition of the object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interactions.ObjectInteraction.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ObjectInteraction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ObjectInteraction.update" title="Permalink to this definition"></a></dt>
+<dd><p>“Updating all the things</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="interactions.random">
+<span class="sig-prename descclassname"><span class="pre">interactions.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">x</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">interval</span> <span class="pre">[0,</span> <span class="pre">1).</span></span></span><a class="headerlink" href="#interactions.random" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="interactions.ray_cast_player_npc">
+<span class="sig-prename descclassname"><span class="pre">interactions.</span></span><span class="sig-name descname"><span class="pre">ray_cast_player_npc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_map_position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_map_position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/interactions.html#ray_cast_player_npc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interactions.ray_cast_player_npc" title="Permalink to this definition"></a></dt>
+<dd><p>“Ray casting for shooting to check if the player and the obeject are on site.
+Returns true else False</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

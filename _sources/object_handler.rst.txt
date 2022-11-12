@@ -1,0 +1,7 @@
+object\_handler module
+======================
+
+.. automodule:: object_handler
+   :members:
+   :undoc-members:
+   :show-inheritance:

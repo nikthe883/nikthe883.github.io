@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hud module &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="interactions module" href="interactions.html" />
+    <link rel="prev" title="button module" href="button.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Wolfenstein Copy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">button module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hud module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hud.Hud"><code class="docutils literal notranslate"><span class="pre">Hud</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hud.Hud.animate_player_hud_sprite"><code class="docutils literal notranslate"><span class="pre">Hud.animate_player_hud_sprite()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hud.Hud.draw"><code class="docutils literal notranslate"><span class="pre">Hud.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hud.Hud.get_images"><code class="docutils literal notranslate"><span class="pre">Hud.get_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hud.Hud.helper_for_hud_selected_weapon_view"><code class="docutils literal notranslate"><span class="pre">Hud.helper_for_hud_selected_weapon_view()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interactions.html">interactions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main_menu.html">main_menu module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">map module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="npc.html">npc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_handler.html">object_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="path_find_bfs.html">path_find_bfs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html">player module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_map_generation.html">random_map_generation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raycasting.html">raycasting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="renderer.html">renderer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="save_and_load_game.html">save_and_load_game module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html">settings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">sound module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sprite_object.html">sprite_object module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="weapons.html">weapons module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Wolfenstein Copy</a></li>
+      <li class="breadcrumb-item active">hud module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/hud.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-hud">
+<span id="hud-module"></span><h1>hud module<a class="headerlink" href="#module-hud" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="hud.Hud">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hud.</span></span><span class="sig-name descname"><span class="pre">Hud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hud.html#Hud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hud.Hud" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class hud</p>
+<p>Everything that is showed on the screen like ammo, weapon selections, small player sprite animations,
+without the weapons and the minimap</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hud.Hud.animate_player_hud_sprite">
+<span class="sig-name descname"><span class="pre">animate_player_hud_sprite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hud.html#Hud.animate_player_hud_sprite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hud.Hud.animate_player_hud_sprite" title="Permalink to this definition"></a></dt>
+<dd><p>Animation function for the small player sprite in the
+middle of the hud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hud.Hud.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hud.html#Hud.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hud.Hud.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hud.Hud.get_images">
+<span class="sig-name descname"><span class="pre">get_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hud.html#Hud.get_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hud.Hud.get_images" title="Permalink to this definition"></a></dt>
+<dd><p>Function for getting the hud images and converting them to transparent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to the image</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>images</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>deque</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hud.Hud.helper_for_hud_selected_weapon_view">
+<span class="sig-name descname"><span class="pre">helper_for_hud_selected_weapon_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hud.html#Hud.helper_for_hud_selected_weapon_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hud.Hud.helper_for_hud_selected_weapon_view" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function for displaying selected weapons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="button.html" class="btn btn-neutral float-left" title="button module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interactions.html" class="btn btn-neutral float-right" title="interactions module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

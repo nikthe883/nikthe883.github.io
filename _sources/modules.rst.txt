@@ -1,0 +1,24 @@
+Wolfenstein Copy
+================
+
+.. toctree::
+   :maxdepth: 4
+
+   button
+   hud
+   interactions
+   main
+   main_menu
+   map
+   npc
+   object_handler
+   path_find_bfs
+   player
+   random_map_generation
+   raycasting
+   renderer
+   save_and_load_game
+   settings
+   sound
+   sprite_object
+   weapons

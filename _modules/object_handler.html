@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>object_handler &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">object_handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for object_handler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">sprite_object</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">npc</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choices</span><span class="p">,</span> <span class="n">randrange</span>
+<span class="kn">from</span> <span class="nn">interactions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">settings</span>
+
+
+<div class="viewcode-block" id="ObjectHandler"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler">[docs]</a><span class="k">class</span> <span class="nc">ObjectHandler</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for handling the in game object. Animated sprites, npc, loot boxes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for the ObjectHandler class.</span>
+
+<span class="sd">        :param game: gets self from class Game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_sprite_path</span> <span class="o">=</span> <span class="s1">&#39;resources/sprites/npc/&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">static_sprite_path</span> <span class="o">=</span> <span class="s1">&#39;resources/sprites/static_sprites/&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anim_sprite_path</span> <span class="o">=</span> <span class="s1">&#39;resources/sprites/animated_sprites/&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_positions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_positions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interactable_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list_positions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">enemies</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">NPC_COUNT</span>  <span class="c1"># npc count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SoldierNPC&#39;</span><span class="p">,</span> <span class="s1">&#39;CyberDemonNPC&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>  <span class="c1"># weight for npc spawning types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restricted_area</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)}</span>
+
+        <span class="c1"># spawn collectables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collectable_number</span> <span class="o">=</span> <span class="n">TOTAL_NUMBER_COLLECTABLES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spawn_collectables</span><span class="p">()</span>
+
+        <span class="c1"># spawn sprites</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprites_number</span> <span class="o">=</span> <span class="n">TOTAL_NUMBER_SPRITES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spawn_sprites</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spawn_npc</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ObjectHandler.spawn_npc"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.spawn_npc">[docs]</a>    <span class="k">def</span> <span class="nf">spawn_npc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Spawn function for npc objects.</span>
+
+<span class="sd">        Adds the npc to the list on condition if the len of the npc_list is less than the desired one</span>
+<span class="sd">        It checks if the load game parameter is true or not.</span>
+<span class="sd">        If the load game boolean parameter is true then adds the npc according to their previously saved positions</span>
+<span class="sd">        If the load game boolean parameter is false, the function randomly places the npc objects in the world</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">enemies</span><span class="p">:</span>
+            <span class="c1"># for loading the npc</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load_game</span><span class="p">:</span>
+                <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;npc_positions&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;npc_type&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pos</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SoldierNPC&quot;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add_npc</span><span class="p">(</span><span class="n">SoldierNPC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CyberDemonNPC&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add_npc</span><span class="p">(</span><span class="n">CyberDemonNPC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">npc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load_game</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">npc</span> <span class="o">=</span> <span class="n">choices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npc_types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted_area</span><span class="p">):</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc</span> <span class="o">==</span> <span class="s2">&quot;SoldierNPC&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_npc</span><span class="p">(</span><span class="n">SoldierNPC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc</span> <span class="o">==</span> <span class="s1">&#39;CyberDemonNPC&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_npc</span><span class="p">(</span><span class="n">CyberDemonNPC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.spawn_collectables"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.spawn_collectables">[docs]</a>    <span class="k">def</span> <span class="nf">spawn_collectables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Spawn function for collectable objects.</span>
+
+<span class="sd">        It checks if the load game parameter is true or not.</span>
+<span class="sd">        If the load game boolean parameter is true then adds the collectable according to their previously saved positions</span>
+<span class="sd">        If the load game boolean parameter is false, the function randomly places the collectable objects in the world</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load_game</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;pick_sprite_positions&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_interactables</span><span class="p">(</span><span class="n">ObjectInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collectable_number</span><span class="p">):</span>
+                <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+                <span class="k">while</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_interactables</span><span class="p">(</span><span class="n">ObjectInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.spawn_sprites"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.spawn_sprites">[docs]</a>    <span class="k">def</span> <span class="nf">spawn_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Spawn function for sprite objects.</span>
+
+<span class="sd">        It checks if the load game parameter is true or not.</span>
+<span class="sd">        If the load game boolean parameter is true then adds the sprites according to their previously saved positions</span>
+<span class="sd">        If the load game boolean parameter is false, the function randomly places the sprites objects in the world</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load_game</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">loaded_data</span><span class="p">[</span><span class="s1">&#39;sprite_list&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_sprite</span><span class="p">(</span><span class="n">AnimatedSprite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sprites_number</span><span class="p">):</span>
+                <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+                <span class="k">while</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">randrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_sprite</span><span class="p">(</span><span class="n">AnimatedSprite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.update"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updating method that is spawning the npc, getting npc positions, sprite positions, pick sprites positions and updates the lists of npc and sprites.</span>
+
+<span class="sd">        :return: npc_positions, npc_type_list, pick_sprites_positions, sprite_list_positions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spawn_npc</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">npc</span><span class="o">.</span><span class="n">map_pos</span> <span class="k">for</span> <span class="n">npc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span> <span class="k">if</span> <span class="n">npc</span><span class="o">.</span><span class="n">alive</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list_positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">sprite</span><span class="o">.</span><span class="n">map_pos</span> <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">sprite</span><span class="o">.</span><span class="n">map_pos</span> <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interactable_list</span> <span class="k">if</span> <span class="n">sprite</span><span class="o">.</span><span class="n">alive</span><span class="p">]</span>
+
+        <span class="p">[</span><span class="n">sprite</span><span class="o">.</span><span class="n">update</span><span class="p">()</span> <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list</span><span class="p">]</span>
+        <span class="p">[</span><span class="n">sprite</span><span class="o">.</span><span class="n">update</span><span class="p">()</span> <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sprite</span><span class="o">.</span><span class="n">picked</span><span class="p">]</span>
+        <span class="p">[</span><span class="n">sprite</span><span class="o">.</span><span class="n">update</span><span class="p">()</span> <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interactable_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sprite</span><span class="o">.</span><span class="n">gone</span><span class="p">]</span>
+        <span class="p">[</span><span class="n">npc</span><span class="o">.</span><span class="n">update</span><span class="p">()</span> <span class="k">for</span> <span class="n">npc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">npc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">npc</span><span class="o">.</span><span class="n">gone</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">npc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_positions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_types_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_positions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list_positions</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.draw"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Drawing function for drawing the npc positions and the barrel positions on the minimap</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_positions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">npc_positions</span><span class="p">:</span>
+                <span class="n">pg</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sc_map</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">MINIMAP_TILE_SIZE</span><span class="p">,</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">MINIMAP_TILE_SIZE</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_positions</span><span class="p">:</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sc_map</span><span class="p">,</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">MINIMAP_TILE_SIZE</span><span class="p">,</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">MINIMAP_TILE_SIZE</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span></div>
+
+    <span class="c1"># Methods s adding sprites to lists</span>
+<div class="viewcode-block" id="ObjectHandler.add_npc"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.add_npc">[docs]</a>    <span class="k">def</span> <span class="nf">add_npc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">npc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for adding npc objects to the npc list.</span>
+
+<span class="sd">        :param npc: npc object</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">npc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.add_sprite"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.add_sprite">[docs]</a>    <span class="k">def</span> <span class="nf">add_sprite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sprite</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for adding sprite objects to the sprite lists</span>
+
+<span class="sd">        :param sprite: sprite object</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprite_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sprite</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.add_pick_sprites"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.add_pick_sprites">[docs]</a>    <span class="k">def</span> <span class="nf">add_pick_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sprite</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for adding pick sprites obejct to the pick sprites list</span>
+
+<span class="sd">        :param sprite: sprite object</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pick_sprites_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sprite</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectHandler.add_interactables"><a class="viewcode-back" href="../object_handler.html#object_handler.ObjectHandler.add_interactables">[docs]</a>    <span class="k">def</span> <span class="nf">add_interactables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sprite</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for adding interactable objects to the interactables list</span>
+
+<span class="sd">        :param sprite: sprite object</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interactable_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sprite</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

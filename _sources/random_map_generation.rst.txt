@@ -1,0 +1,7 @@
+random\_map\_generation module
+==============================
+
+.. automodule:: random_map_generation
+   :members:
+   :undoc-members:
+   :show-inheritance:

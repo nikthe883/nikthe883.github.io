@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>npc module &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">npc module</a><ul>
+<li><a class="reference internal" href="#npc.CyberDemonNPC"><code class="docutils literal notranslate"><span class="pre">CyberDemonNPC</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC"><code class="docutils literal notranslate"><span class="pre">NPC</span></code></a><ul>
+<li><a class="reference internal" href="#npc.NPC.animate_death"><code class="docutils literal notranslate"><span class="pre">NPC.animate_death()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.animate_pain"><code class="docutils literal notranslate"><span class="pre">NPC.animate_pain()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.attack"><code class="docutils literal notranslate"><span class="pre">NPC.attack()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.check_health"><code class="docutils literal notranslate"><span class="pre">NPC.check_health()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.check_hit_in_npc"><code class="docutils literal notranslate"><span class="pre">NPC.check_hit_in_npc()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.check_wall"><code class="docutils literal notranslate"><span class="pre">NPC.check_wall()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.check_wall_collision"><code class="docutils literal notranslate"><span class="pre">NPC.check_wall_collision()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.loop_drop"><code class="docutils literal notranslate"><span class="pre">NPC.loop_drop()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.map_pos"><code class="docutils literal notranslate"><span class="pre">NPC.map_pos</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.movement"><code class="docutils literal notranslate"><span class="pre">NPC.movement()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.path_find"><code class="docutils literal notranslate"><span class="pre">NPC.path_find()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.ray_cast_player_npc"><code class="docutils literal notranslate"><span class="pre">NPC.ray_cast_player_npc()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.run_logic"><code class="docutils literal notranslate"><span class="pre">NPC.run_logic()</span></code></a></li>
+<li><a class="reference internal" href="#npc.NPC.update"><code class="docutils literal notranslate"><span class="pre">NPC.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#npc.SoldierNPC"><code class="docutils literal notranslate"><span class="pre">SoldierNPC</span></code></a></li>
+<li><a class="reference internal" href="#npc.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">npc module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/npc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-npc">
+<span id="npc-module"></span><h1>npc module<a class="headerlink" href="#module-npc" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="npc.CyberDemonNPC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">npc.</span></span><span class="sig-name descname"><span class="pre">CyberDemonNPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'resources/sprites/npc/cyber_demon/0.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(11.5,</span> <span class="pre">6.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.04</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">210</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#CyberDemonNPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.CyberDemonNPC" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#npc.NPC" title="npc.NPC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NPC</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="npc.NPC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">npc.</span></span><span class="sig-name descname"><span class="pre">NPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'resources/sprites/npc/soldier/0.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10.5,</span> <span class="pre">5.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.38</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="sprite_object.html#sprite_object.AnimatedSprite" title="sprite_object.AnimatedSprite"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnimatedSprite</span></code></a></p>
+<p>Class npc.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.animate_death">
+<span class="sig-name descname"><span class="pre">animate_death</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.animate_death"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.animate_death" title="Permalink to this definition"></a></dt>
+<dd><p>Function for animating death.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.animate_pain">
+<span class="sig-name descname"><span class="pre">animate_pain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.animate_pain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.animate_pain" title="Permalink to this definition"></a></dt>
+<dd><p>Function for animating pain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.attack">
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.attack" title="Permalink to this definition"></a></dt>
+<dd><p>Function for attacking the player with some random accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.check_health">
+<span class="sig-name descname"><span class="pre">check_health</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.check_health"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.check_health" title="Permalink to this definition"></a></dt>
+<dd><p>Function for checking NPC health</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.check_hit_in_npc">
+<span class="sig-name descname"><span class="pre">check_hit_in_npc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.check_hit_in_npc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.check_hit_in_npc" title="Permalink to this definition"></a></dt>
+<dd><p>Function for checking if player has hit NPC with different weapons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.check_wall">
+<span class="sig-name descname"><span class="pre">check_wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.check_wall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.check_wall" title="Permalink to this definition"></a></dt>
+<dd><p>Helper for the check wall collision function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x coordinates of npc.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y coordinates of npc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>x and y if not in the world map</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.check_wall_collision">
+<span class="sig-name descname"><span class="pre">check_wall_collision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.check_wall_collision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.check_wall_collision" title="Permalink to this definition"></a></dt>
+<dd><p>Checking for wall collision. Using the size of the npc sprite</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dx</strong> (<em>float</em>) – next x coordinate position of npc.</p></li>
+<li><p><strong>dy</strong> (<em>float</em>) – next y coordinate position of npc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.loop_drop">
+<span class="sig-name descname"><span class="pre">loop_drop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.loop_drop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.loop_drop" title="Permalink to this definition"></a></dt>
+<dd><p>Function for dropping loot logic.</p>
+<p>Checks if the NPC is alive and if the drop_loot is True
+If drop is bigger than random it drops random selected item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="npc.NPC.map_pos">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">map_pos</span></span><a class="headerlink" href="#npc.NPC.map_pos" title="Permalink to this definition"></a></dt>
+<dd><p>Property function to return npc position on map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>x and y</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.movement">
+<span class="sig-name descname"><span class="pre">movement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.movement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.movement" title="Permalink to this definition"></a></dt>
+<dd><p>Function for NPC movement</p>
+<p>1If the pathfinding library is installed
+the movement is done by A star algorithm, else BFS</p>
+<p>:return None
+:rtype: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.path_find">
+<span class="sig-name descname"><span class="pre">path_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mini_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.path_find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.path_find" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function for A star algorithm of the path finding library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>tuple</em>) – map tile position of npc</p></li>
+<li><p><strong>goal</strong> (<em>tuple</em>) – map tile position of player</p></li>
+<li><p><strong>mini_map</strong> (<em>list</em>) – take s the game map</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>last list value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.ray_cast_player_npc">
+<span class="sig-name descname"><span class="pre">ray_cast_player_npc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.ray_cast_player_npc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.ray_cast_player_npc" title="Permalink to this definition"></a></dt>
+<dd><p>Raycasting for NPC.</p>
+<p>One line raycasting between NPC and player.
+Is used for shooting logic and for pathfinding logic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True or False</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.run_logic">
+<span class="sig-name descname"><span class="pre">run_logic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.run_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.run_logic" title="Permalink to this definition"></a></dt>
+<dd><p>Function for npc run logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="npc.NPC.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#NPC.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.NPC.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="npc.SoldierNPC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">npc.</span></span><span class="sig-name descname"><span class="pre">SoldierNPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'resources/sprites/npc/soldier/0.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10.5,</span> <span class="pre">5.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.38</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/npc.html#SoldierNPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#npc.SoldierNPC" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#npc.NPC" title="npc.NPC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NPC</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="npc.random">
+<span class="sig-prename descclassname"><span class="pre">npc.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">x</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">interval</span> <span class="pre">[0,</span> <span class="pre">1).</span></span></span><a class="headerlink" href="#npc.random" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

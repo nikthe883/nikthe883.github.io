@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>raycasting &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">raycasting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for raycasting</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="RayCasting"><a class="viewcode-back" href="../raycasting.html#raycasting.RayCasting">[docs]</a><span class="k">class</span> <span class="nc">RayCasting</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_render</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">textures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">object_renderer</span><span class="o">.</span><span class="n">wall_textures</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_raycast</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ray_casting_result</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="RayCasting.update"><a class="viewcode-back" href="../raycasting.html#raycasting.RayCasting.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_objects_to_render</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RayCasting.get_objects_to_render"><a class="viewcode-back" href="../raycasting.html#raycasting.RayCasting.get_objects_to_render">[docs]</a>    <span class="k">def</span> <span class="nf">get_objects_to_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_render</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">ray</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ray_casting_result</span><span class="p">):</span>
+            <span class="n">depth</span><span class="p">,</span> <span class="n">projection_height</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">values</span>
+
+            <span class="n">wall_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">textures</span><span class="p">[</span><span class="n">texture</span><span class="p">]</span><span class="o">.</span><span class="n">subsurface</span><span class="p">(</span>
+                <span class="n">offset</span> <span class="o">*</span> <span class="p">(</span><span class="n">TEXTURE_SIZE</span> <span class="o">-</span> <span class="n">SCALE</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SCALE</span><span class="p">,</span> <span class="n">TEXTURE_SIZE</span>
+
+            <span class="p">)</span>
+            <span class="n">wall_column</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">wall_column</span><span class="p">,</span> <span class="p">(</span><span class="n">SCALE</span><span class="p">,</span> <span class="n">projection_height</span><span class="p">))</span>
+            <span class="n">wall_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">ray</span> <span class="o">*</span> <span class="n">SCALE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">half_height</span> <span class="o">-</span> <span class="n">projection_height</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_render</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">depth</span><span class="p">,</span> <span class="n">wall_column</span><span class="p">,</span> <span class="n">wall_position</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RayCasting.ray_cast"><a class="viewcode-back" href="../raycasting.html#raycasting.RayCasting.ray_cast">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ray_casting_result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">texture_vertical</span><span class="p">,</span> <span class="n">texture_horizontal</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">x_map</span><span class="p">,</span> <span class="n">y_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">map_pos</span>
+
+        <span class="n">ray_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">angle</span> <span class="o">-</span> <span class="n">HALF_FOV</span> <span class="o">+</span> <span class="mf">0.0001</span>
+        <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_RAYS</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ray_angle</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ray_angle</span><span class="p">)</span>
+
+            <span class="c1"># horizontals</span>
+            <span class="n">y_horizontal</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_map</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">y_map</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">depth_horizontal</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_horizontal</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">oy</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span>
+            <span class="n">x_horizontal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ox</span> <span class="o">+</span> <span class="n">depth_horizontal</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span>
+
+            <span class="n">delta_depth</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">delta_depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_DEPTH</span><span class="p">):</span>
+                <span class="n">tile_horizontal</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_horizontal</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_horizontal</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">tile_horizontal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                    <span class="n">texture_horizontal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">[</span><span class="n">tile_horizontal</span><span class="p">]</span>
+                    <span class="k">break</span>
+                <span class="n">x_horizontal</span> <span class="o">+=</span> <span class="n">dx</span>
+                <span class="n">y_horizontal</span> <span class="o">+=</span> <span class="n">dy</span>
+                <span class="n">depth_horizontal</span> <span class="o">+=</span> <span class="n">delta_depth</span>
+
+            <span class="c1"># verticals</span>
+            <span class="n">x_vertical</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_map</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">x_map</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">depth_vertical</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_vertical</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ox</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span>
+            <span class="n">y_vertical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">oy</span> <span class="o">+</span> <span class="n">depth_vertical</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span>
+
+            <span class="n">delta_depth</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">delta_depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_DEPTH</span><span class="p">):</span>
+                <span class="n">tile_vertical</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_vertical</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_vertical</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">tile_vertical</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">:</span>
+                    <span class="n">texture_vertical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">world_map</span><span class="p">[</span><span class="n">tile_vertical</span><span class="p">]</span>
+                    <span class="k">break</span>
+                <span class="n">x_vertical</span> <span class="o">+=</span> <span class="n">dx</span>
+                <span class="n">y_vertical</span> <span class="o">+=</span> <span class="n">dy</span>
+                <span class="n">depth_vertical</span> <span class="o">+=</span> <span class="n">delta_depth</span>
+
+            <span class="c1"># depth, texture offset</span>
+            <span class="k">if</span> <span class="n">depth_vertical</span> <span class="o">&lt;</span> <span class="n">depth_horizontal</span><span class="p">:</span>
+                <span class="n">depth</span><span class="p">,</span> <span class="n">texture</span> <span class="o">=</span> <span class="n">depth_vertical</span><span class="p">,</span> <span class="n">texture_vertical</span>
+                <span class="n">y_vertical</span> <span class="o">%=</span> <span class="mi">1</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">y_vertical</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_vertical</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">depth</span><span class="p">,</span> <span class="n">texture</span> <span class="o">=</span> <span class="n">depth_horizontal</span><span class="p">,</span> <span class="n">texture_horizontal</span>
+                <span class="n">x_horizontal</span> <span class="o">%=</span> <span class="mi">1</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_horizontal</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">x_horizontal</span>
+
+            <span class="c1"># remove fishbowl effect</span>
+            <span class="n">depth</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">angle</span> <span class="o">-</span> <span class="n">ray_angle</span><span class="p">)</span>
+
+            <span class="c1"># projection</span>
+            <span class="n">projection_height</span> <span class="o">=</span> <span class="n">SCREEN_DIST</span> <span class="o">/</span> <span class="p">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mf">0.0001</span><span class="p">)</span>
+
+            <span class="c1"># ray casting result</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ray_casting_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">depth</span><span class="p">,</span> <span class="n">projection_height</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
+
+            <span class="c1"># drawing the cast on the minimap</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_raycast</span><span class="p">:</span>
+                <span class="n">pg</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">sc_map</span><span class="p">,</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">MINIMAP_TILE_SIZE</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ox</span><span class="p">,</span> <span class="n">MINIMAP_TILE_SIZE</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">oy</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">MINIMAP_TILE_SIZE</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ox</span> <span class="o">+</span> <span class="n">MINIMAP_TILE_SIZE</span> <span class="o">*</span> <span class="n">depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos_a</span><span class="p">,</span> <span class="n">MINIMAP_TILE_SIZE</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">oy</span> <span class="o">+</span> <span class="n">MINIMAP_TILE_SIZE</span> <span class="o">*</span> <span class="n">depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_a</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">ray_angle</span> <span class="o">+=</span> <span class="n">DELTA_ANGLE</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

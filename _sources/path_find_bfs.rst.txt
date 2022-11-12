@@ -1,0 +1,7 @@
+path\_find\_bfs module
+======================
+
+.. automodule:: path_find_bfs
+   :members:
+   :undoc-members:
+   :show-inheritance:

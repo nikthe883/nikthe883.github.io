@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sprite_object &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sprite_object</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sprite_object</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+
+
+<div class="viewcode-block" id="SpriteObject"><a class="viewcode-back" href="../sprite_object.html#sprite_object.SpriteObject">[docs]</a><span class="k">class</span> <span class="nc">SpriteObject</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;resources/sprites/static_sprites/candlebra.png&#39;</span><span class="p">,</span>
+                 <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">pick</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gone</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pick</span> <span class="o">=</span> <span class="n">pick</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picked</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gone</span> <span class="o">=</span> <span class="n">gone</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loot_type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_WIDTH</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_HALF_WIDTH</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_RATIO</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_WIDTH</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_dist</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprite_half_width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SPRITE_SCALE</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SPRITE_HEIGHT_SHIFT</span> <span class="o">=</span> <span class="n">shift</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loot_type_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;armor&quot;</span><span class="p">,</span> <span class="s2">&quot;minigun_ammo&quot;</span><span class="p">,</span> <span class="s2">&quot;shotgun_ammo&quot;</span><span class="p">,</span> <span class="s2">&quot;chainsaw_ammo&quot;</span><span class="p">,</span> <span class="s2">&quot;health&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SpriteObject.get_sprite_projection"><a class="viewcode-back" href="../sprite_object.html#sprite_object.SpriteObject.get_sprite_projection">[docs]</a>    <span class="k">def</span> <span class="nf">get_sprite_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Getting the sprite projection. More in docs&quot;&quot;&quot;</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">SCREEN_DIST</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_dist</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">SPRITE_SCALE</span>
+        <span class="n">projection_width</span><span class="p">,</span> <span class="n">projection_height</span> <span class="o">=</span> <span class="n">projection</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_RATIO</span><span class="p">,</span> <span class="n">projection</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="n">projection_width</span><span class="p">,</span> <span class="n">projection_height</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sprite_half_width</span> <span class="o">=</span> <span class="n">projection_width</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">height_shift</span> <span class="o">=</span> <span class="n">projection_height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">SPRITE_HEIGHT_SHIFT</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprite_half_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">half_height</span> <span class="o">-</span> <span class="n">projection_height</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">height_shift</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">raycasting</span><span class="o">.</span><span class="n">objects_to_render</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">norm_dist</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">pos</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SpriteObject.pick_object"><a class="viewcode-back" href="../sprite_object.html#sprite_object.SpriteObject.pick_object">[docs]</a>    <span class="k">def</span> <span class="nf">pick_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function that checks if the sprites is picked if it can be picked</span>
+<span class="sd">        and safeguard maximum quantity of each item&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">picked</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loot_type</span> <span class="o">==</span> <span class="s2">&quot;armor&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">armor</span> <span class="o">&lt;</span> <span class="n">PLAYER_MAX_ARMOR</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">armor</span> <span class="o">+=</span> <span class="mi">20</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loot_type</span> <span class="o">==</span> <span class="s2">&quot;health&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;</span> <span class="n">PLAYER_MAX_HEALTH</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">health</span> <span class="o">+=</span> <span class="mi">30</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loot_type</span> <span class="o">==</span> <span class="s2">&quot;minigun_ammo&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">&lt;</span> <span class="n">PLAYER_MAX_MINIGUN_AMMO</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">minigun_ammo</span> <span class="o">+=</span> <span class="mi">40</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loot_type</span> <span class="o">==</span> <span class="s2">&quot;shotgun_ammo&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">&lt;</span> <span class="n">PLAYER_MAX_SHOTGUN_AMMO</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">shotgun_ammo</span> <span class="o">+=</span> <span class="mi">20</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loot_type</span> <span class="o">==</span> <span class="s2">&quot;chainsaw_ammo&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">&lt;</span> <span class="n">PLAYER_MAX_CHAINSAW_FUEL</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">vruum_vruum_fuel</span> <span class="o">+=</span> <span class="mi">40</span></div>
+
+<div class="viewcode-block" id="SpriteObject.get_sprite"><a class="viewcode-back" href="../sprite_object.html#sprite_object.SpriteObject.get_sprite">[docs]</a>    <span class="k">def</span> <span class="nf">get_sprite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">angle</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">angle</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">dx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dy</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">delta</span> <span class="o">+=</span> <span class="n">math</span><span class="o">.</span><span class="n">tau</span>
+
+        <span class="n">delta_rays</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">/</span> <span class="n">DELTA_ANGLE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">HALF_NUM_RAYS</span> <span class="o">+</span> <span class="n">delta_rays</span><span class="p">)</span> <span class="o">*</span> <span class="n">SCALE</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_HALF_WIDTH</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_x</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">WIDTH</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">IMAGE_HALF_WIDTH</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_dist</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_sprite_projection</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SpriteObject.update"><a class="viewcode-back" href="../sprite_object.html#sprite_object.SpriteObject.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_sprite</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pick_object</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="AnimatedSprite"><a class="viewcode-back" href="../sprite_object.html#sprite_object.AnimatedSprite">[docs]</a><span class="k">class</span> <span class="nc">AnimatedSprite</span><span class="p">(</span><span class="n">SpriteObject</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;resources/sprites/animated_sprites/green_light/0.png&#39;</span><span class="p">,</span>
+                 <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">11.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mf">0.16</span><span class="p">,</span> <span class="n">animation_time</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">gone</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation_time</span> <span class="o">=</span> <span class="n">animation_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation_time_prev</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation_trigger</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gone</span> <span class="o">=</span> <span class="n">gone</span>
+
+<div class="viewcode-block" id="AnimatedSprite.update"><a class="viewcode-back" href="../sprite_object.html#sprite_object.AnimatedSprite.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_animation_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnimatedSprite.animate"><a class="viewcode-back" href="../sprite_object.html#sprite_object.AnimatedSprite.animate">[docs]</a>    <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_trigger</span><span class="p">:</span>
+            <span class="n">images</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AnimatedSprite.check_animation_time"><a class="viewcode-back" href="../sprite_object.html#sprite_object.AnimatedSprite.check_animation_time">[docs]</a>    <span class="k">def</span> <span class="nf">check_animation_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation_trigger</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">time_now</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">time_now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_time_prev</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_time</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation_time_prev</span> <span class="o">=</span> <span class="n">time_now</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation_trigger</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="AnimatedSprite.get_images"><a class="viewcode-back" href="../sprite_object.html#sprite_object.AnimatedSprite.get_images">[docs]</a>    <span class="k">def</span> <span class="nf">get_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)):</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+                <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">images</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">map_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

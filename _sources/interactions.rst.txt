@@ -1,0 +1,7 @@
+interactions module
+===================
+
+.. automodule:: interactions
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main_menu module &mdash; WolfensteinCopy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="map module" href="map.html" />
+    <link rel="prev" title="main module" href="main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> WolfensteinCopy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Wolfenstein Copy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">button module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hud.html">hud module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactions.html">interactions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">main_menu module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main_menu.FinalScore"><code class="docutils literal notranslate"><span class="pre">FinalScore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.back_main_menu"><code class="docutils literal notranslate"><span class="pre">FinalScore.back_main_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.check_events"><code class="docutils literal notranslate"><span class="pre">FinalScore.check_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.draw"><code class="docutils literal notranslate"><span class="pre">FinalScore.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.draw_background"><code class="docutils literal notranslate"><span class="pre">FinalScore.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.draw_numbers"><code class="docutils literal notranslate"><span class="pre">FinalScore.draw_numbers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.get_textures"><code class="docutils literal notranslate"><span class="pre">FinalScore.get_textures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.run"><code class="docutils literal notranslate"><span class="pre">FinalScore.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.FinalScore.update"><code class="docutils literal notranslate"><span class="pre">FinalScore.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main_menu.LoadGameMenu"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.back_main_menu"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.back_main_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.check_events"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.check_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.choose_slot"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.choose_slot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.draw"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.draw_background"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.draw_date"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.draw_date()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.get_textures"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.get_textures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.load_game"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.load_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.run"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.show_load_games"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.show_load_games()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.show_loaded_game_slots"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.show_loaded_game_slots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.LoadGameMenu.update"><code class="docutils literal notranslate"><span class="pre">LoadGameMenu.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main_menu.MainMenu"><code class="docutils literal notranslate"><span class="pre">MainMenu</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.check_events"><code class="docutils literal notranslate"><span class="pre">MainMenu.check_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.draw"><code class="docutils literal notranslate"><span class="pre">MainMenu.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.draw_background"><code class="docutils literal notranslate"><span class="pre">MainMenu.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.exit_game"><code class="docutils literal notranslate"><span class="pre">MainMenu.exit_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.load_game"><code class="docutils literal notranslate"><span class="pre">MainMenu.load_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.options"><code class="docutils literal notranslate"><span class="pre">MainMenu.options()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.resume_game"><code class="docutils literal notranslate"><span class="pre">MainMenu.resume_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.run"><code class="docutils literal notranslate"><span class="pre">MainMenu.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.save_game"><code class="docutils literal notranslate"><span class="pre">MainMenu.save_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.start_new_game"><code class="docutils literal notranslate"><span class="pre">MainMenu.start_new_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.MainMenu.update"><code class="docutils literal notranslate"><span class="pre">MainMenu.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main_menu.NewGame"><code class="docutils literal notranslate"><span class="pre">NewGame</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.back_main_menu"><code class="docutils literal notranslate"><span class="pre">NewGame.back_main_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.check_events"><code class="docutils literal notranslate"><span class="pre">NewGame.check_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.draw"><code class="docutils literal notranslate"><span class="pre">NewGame.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.draw_background"><code class="docutils literal notranslate"><span class="pre">NewGame.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.draw_numbers"><code class="docutils literal notranslate"><span class="pre">NewGame.draw_numbers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.enemy_count_options"><code class="docutils literal notranslate"><span class="pre">NewGame.enemy_count_options()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.game_difficulty_options"><code class="docutils literal notranslate"><span class="pre">NewGame.game_difficulty_options()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.get_textures"><code class="docutils literal notranslate"><span class="pre">NewGame.get_textures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.map_generation_options"><code class="docutils literal notranslate"><span class="pre">NewGame.map_generation_options()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.run"><code class="docutils literal notranslate"><span class="pre">NewGame.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.start_new_game"><code class="docutils literal notranslate"><span class="pre">NewGame.start_new_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.update"><code class="docutils literal notranslate"><span class="pre">NewGame.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.NewGame.win_condition_options"><code class="docutils literal notranslate"><span class="pre">NewGame.win_condition_options()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main_menu.Options"><code class="docutils literal notranslate"><span class="pre">Options</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.back_main_menu"><code class="docutils literal notranslate"><span class="pre">Options.back_main_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.check_events"><code class="docutils literal notranslate"><span class="pre">Options.check_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.draw"><code class="docutils literal notranslate"><span class="pre">Options.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.draw_background"><code class="docutils literal notranslate"><span class="pre">Options.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.draw_inputs"><code class="docutils literal notranslate"><span class="pre">Options.draw_inputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.draw_inputs_helper"><code class="docutils literal notranslate"><span class="pre">Options.draw_inputs_helper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.draw_numbers"><code class="docutils literal notranslate"><span class="pre">Options.draw_numbers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.get_textures"><code class="docutils literal notranslate"><span class="pre">Options.get_textures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.key_bindings"><code class="docutils literal notranslate"><span class="pre">Options.key_bindings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.mouse_sensitivity_option"><code class="docutils literal notranslate"><span class="pre">Options.mouse_sensitivity_option()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.resolution_option"><code class="docutils literal notranslate"><span class="pre">Options.resolution_option()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.run"><code class="docutils literal notranslate"><span class="pre">Options.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.save_options"><code class="docutils literal notranslate"><span class="pre">Options.save_options()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.update"><code class="docutils literal notranslate"><span class="pre">Options.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.Options.volume_option"><code class="docutils literal notranslate"><span class="pre">Options.volume_option()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main_menu.SaveGameMenu"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.back_main_menu"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.back_main_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.check_events"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.check_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.choose_slot"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.choose_slot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.delete_saved_games"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.delete_saved_games()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.draw"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.draw_background"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.draw_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.draw_date"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.draw_date()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.get_textures"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.get_textures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.run"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.save_game"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.save_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.show_saved_game_slots"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.show_saved_game_slots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.show_saved_games"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.show_saved_games()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main_menu.SaveGameMenu.update"><code class="docutils literal notranslate"><span class="pre">SaveGameMenu.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">map module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="npc.html">npc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_handler.html">object_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="path_find_bfs.html">path_find_bfs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html">player module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_map_generation.html">random_map_generation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raycasting.html">raycasting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="renderer.html">renderer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="save_and_load_game.html">save_and_load_game module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html">settings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">sound module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sprite_object.html">sprite_object module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="weapons.html">weapons module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WolfensteinCopy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Wolfenstein Copy</a></li>
+      <li class="breadcrumb-item active">main_menu module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/main_menu.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-main_menu">
+<span id="main-menu-module"></span><h1>main_menu module<a class="headerlink" href="#module-main_menu" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="main_menu.FinalScore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main_menu.</span></span><span class="sig-name descname"><span class="pre">FinalScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.back_main_menu">
+<span class="sig-name descname"><span class="pre">back_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.back_main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.back_main_menu" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.check_events">
+<span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.check_events" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function of the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.draw_background">
+<span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.draw_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.draw_background" title="Permalink to this definition"></a></dt>
+<dd><p>Function to draw background and to move the bg image from one side
+to the other side</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.draw_numbers">
+<span class="sig-name descname"><span class="pre">draw_numbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.draw_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.draw_numbers" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing numbers for the kills or the time variables</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.get_textures">
+<span class="sig-name descname"><span class="pre">get_textures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.get_textures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.get_textures" title="Permalink to this definition"></a></dt>
+<dd><p>Getting images and converting them</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.FinalScore.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#FinalScore.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.FinalScore.update" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main_menu.</span></span><span class="sig-name descname"><span class="pre">LoadGameMenu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.back_main_menu">
+<span class="sig-name descname"><span class="pre">back_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.back_main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.back_main_menu" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.check_events">
+<span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.check_events" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.choose_slot">
+<span class="sig-name descname"><span class="pre">choose_slot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.choose_slot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.choose_slot" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function of the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.draw_background">
+<span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.draw_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.draw_background" title="Permalink to this definition"></a></dt>
+<dd><p>Function to draw background and to move the bg image from one side
+to the other side</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.draw_date">
+<span class="sig-name descname"><span class="pre">draw_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.draw_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.draw_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.get_textures">
+<span class="sig-name descname"><span class="pre">get_textures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.get_textures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.get_textures" title="Permalink to this definition"></a></dt>
+<dd><p>Getting images and converting them</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.load_game">
+<span class="sig-name descname"><span class="pre">load_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.load_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.load_game" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.show_load_games">
+<span class="sig-name descname"><span class="pre">show_load_games</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.show_load_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.show_load_games" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.show_loaded_game_slots">
+<span class="sig-name descname"><span class="pre">show_loaded_game_slots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.show_loaded_game_slots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.show_loaded_game_slots" title="Permalink to this definition"></a></dt>
+<dd><p>Showing the loaded slots eg saved game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.LoadGameMenu.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#LoadGameMenu.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.LoadGameMenu.update" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main_menu.MainMenu">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main_menu.</span></span><span class="sig-name descname"><span class="pre">MainMenu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.check_events">
+<span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.check_events" title="Permalink to this definition"></a></dt>
+<dd><p>Loop for checking events in pygame if quit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function of the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.draw_background">
+<span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.draw_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.draw_background" title="Permalink to this definition"></a></dt>
+<dd><p>Function to draw background and to move the bg image from one side
+to the other side</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.exit_game">
+<span class="sig-name descname"><span class="pre">exit_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.exit_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.exit_game" title="Permalink to this definition"></a></dt>
+<dd><p>Exiting the game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.load_game">
+<span class="sig-name descname"><span class="pre">load_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.load_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.load_game" title="Permalink to this definition"></a></dt>
+<dd><p>Function for loading game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.options">
+<span class="sig-name descname"><span class="pre">options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.options" title="Permalink to this definition"></a></dt>
+<dd><p>Fucntion for going to options menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.resume_game">
+<span class="sig-name descname"><span class="pre">resume_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.resume_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.resume_game" title="Permalink to this definition"></a></dt>
+<dd><p>For pausing the game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.run" title="Permalink to this definition"></a></dt>
+<dd><p>Running loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.save_game">
+<span class="sig-name descname"><span class="pre">save_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.save_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.save_game" title="Permalink to this definition"></a></dt>
+<dd><p>Function for going to the save game menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.start_new_game">
+<span class="sig-name descname"><span class="pre">start_new_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.start_new_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.start_new_game" title="Permalink to this definition"></a></dt>
+<dd><p>Function for going to the new game menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.MainMenu.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#MainMenu.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.MainMenu.update" title="Permalink to this definition"></a></dt>
+<dd><p>Updating function</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main_menu.NewGame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main_menu.</span></span><span class="sig-name descname"><span class="pre">NewGame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.back_main_menu">
+<span class="sig-name descname"><span class="pre">back_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.back_main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.back_main_menu" title="Permalink to this definition"></a></dt>
+<dd><p>for going back to main menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.check_events">
+<span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.check_events" title="Permalink to this definition"></a></dt>
+<dd><p>Function for checking events</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function of the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.draw_background">
+<span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.draw_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.draw_background" title="Permalink to this definition"></a></dt>
+<dd><p>Function to draw background and to move the bg image from one side
+to the other side</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.draw_numbers">
+<span class="sig-name descname"><span class="pre">draw_numbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.draw_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.draw_numbers" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing numbers for the kills or the time variables</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.enemy_count_options">
+<span class="sig-name descname"><span class="pre">enemy_count_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.enemy_count_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.enemy_count_options" title="Permalink to this definition"></a></dt>
+<dd><p>For enemy spawn option</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.game_difficulty_options">
+<span class="sig-name descname"><span class="pre">game_difficulty_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.game_difficulty_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.game_difficulty_options" title="Permalink to this definition"></a></dt>
+<dd><p>Funtion for choosing the difficulty</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.get_textures">
+<span class="sig-name descname"><span class="pre">get_textures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(256,</span> <span class="pre">256)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.get_textures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.get_textures" title="Permalink to this definition"></a></dt>
+<dd><p>Getting images and converting them</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.map_generation_options">
+<span class="sig-name descname"><span class="pre">map_generation_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.map_generation_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.map_generation_options" title="Permalink to this definition"></a></dt>
+<dd><p>Function for map generation option</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.run" title="Permalink to this definition"></a></dt>
+<dd><p>Running in while loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.start_new_game">
+<span class="sig-name descname"><span class="pre">start_new_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.start_new_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.start_new_game" title="Permalink to this definition"></a></dt>
+<dd><p>Starting the game calling the main game loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.update" title="Permalink to this definition"></a></dt>
+<dd><p>Updating function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.NewGame.win_condition_options">
+<span class="sig-name descname"><span class="pre">win_condition_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#NewGame.win_condition_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.NewGame.win_condition_options" title="Permalink to this definition"></a></dt>
+<dd><p>Function to choose the winning condition of the game</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main_menu.Options">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main_menu.</span></span><span class="sig-name descname"><span class="pre">Options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.back_main_menu">
+<span class="sig-name descname"><span class="pre">back_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.back_main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.back_main_menu" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.check_events">
+<span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.check_events" title="Permalink to this definition"></a></dt>
+<dd><p>Checking for events and looking for keybindings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function of the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.draw_background">
+<span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.draw_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.draw_background" title="Permalink to this definition"></a></dt>
+<dd><p>Function to draw background and to move the bg image from one side
+to the other side</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.draw_inputs">
+<span class="sig-name descname"><span class="pre">draw_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.draw_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.draw_inputs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.draw_inputs_helper">
+<span class="sig-name descname"><span class="pre">draw_inputs_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_binding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.draw_inputs_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.draw_inputs_helper" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.draw_numbers">
+<span class="sig-name descname"><span class="pre">draw_numbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.draw_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.draw_numbers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.get_textures">
+<span class="sig-name descname"><span class="pre">get_textures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.get_textures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.get_textures" title="Permalink to this definition"></a></dt>
+<dd><p>Getting images and converting them</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.key_bindings">
+<span class="sig-name descname"><span class="pre">key_bindings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.key_bindings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.key_bindings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.mouse_sensitivity_option">
+<span class="sig-name descname"><span class="pre">mouse_sensitivity_option</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.mouse_sensitivity_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.mouse_sensitivity_option" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.resolution_option">
+<span class="sig-name descname"><span class="pre">resolution_option</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.resolution_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.resolution_option" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.save_options">
+<span class="sig-name descname"><span class="pre">save_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.save_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.save_options" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.update" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.Options.volume_option">
+<span class="sig-name descname"><span class="pre">volume_option</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#Options.volume_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.Options.volume_option" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main_menu.</span></span><span class="sig-name descname"><span class="pre">SaveGameMenu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.back_main_menu">
+<span class="sig-name descname"><span class="pre">back_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.back_main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.back_main_menu" title="Permalink to this definition"></a></dt>
+<dd><p>Back to main menu function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.check_events">
+<span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.check_events" title="Permalink to this definition"></a></dt>
+<dd><p>Checking for events</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.choose_slot">
+<span class="sig-name descname"><span class="pre">choose_slot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.choose_slot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.choose_slot" title="Permalink to this definition"></a></dt>
+<dd><p>Function for choosing the slot. When user clicks on it, the slot is selected and transformed to bigger scale</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.delete_saved_games">
+<span class="sig-name descname"><span class="pre">delete_saved_games</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.delete_saved_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.delete_saved_games" title="Permalink to this definition"></a></dt>
+<dd><p>Deleting the saved games</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Drawing function of the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.draw_background">
+<span class="sig-name descname"><span class="pre">draw_background</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.draw_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.draw_background" title="Permalink to this definition"></a></dt>
+<dd><p>Function to draw background and to move the bg image from one side
+to the other side</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.draw_date">
+<span class="sig-name descname"><span class="pre">draw_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.draw_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.draw_date" title="Permalink to this definition"></a></dt>
+<dd><p>Function for drawwing the date when game is saved</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.get_textures">
+<span class="sig-name descname"><span class="pre">get_textures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.get_textures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.get_textures" title="Permalink to this definition"></a></dt>
+<dd><p>Getting images and converting them</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.run" title="Permalink to this definition"></a></dt>
+<dd><p>Running loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.save_game">
+<span class="sig-name descname"><span class="pre">save_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.save_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.save_game" title="Permalink to this definition"></a></dt>
+<dd><p>For saving the game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.show_saved_game_slots">
+<span class="sig-name descname"><span class="pre">show_saved_game_slots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.show_saved_game_slots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.show_saved_game_slots" title="Permalink to this definition"></a></dt>
+<dd><p>Showing the slots that are saved game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.show_saved_games">
+<span class="sig-name descname"><span class="pre">show_saved_games</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.show_saved_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.show_saved_games" title="Permalink to this definition"></a></dt>
+<dd><p>For showing the saved games</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main_menu.SaveGameMenu.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main_menu.html#SaveGameMenu.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main_menu.SaveGameMenu.update" title="Permalink to this definition"></a></dt>
+<dd><p>Updating the game loop</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="main.html" class="btn btn-neutral float-left" title="main module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="map.html" class="btn btn-neutral float-right" title="map module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Peter Popmihaylov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
